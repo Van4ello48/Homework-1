@@ -1,15 +1,40 @@
 "use strict"
 
-const goods = [
-    { title: 'Shirt', price: 150 },
-    { title: 'Socks', price: 50 },
-    { title: 'Jacket', price: 350 },
-    { title: 'Shoes', price: 250 },
-];
+const URL = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses";
+const GOODS = "/catalogData.json";
+const url = `${URL}${GOODS}`;
+
+const service = function (url) {
+    return new Promise((resolve) => {
+        let xhr;
+
+        if (window.XMLHttpRequest) {
+            xhr = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+    
+        xhr.open("GET", url, true);
+    
+        xhr.timeout = 5000;
+        xhr.ontimeout = function () {
+            console.log("функция не выполнилась");
+        }
+    
+        xhr.send();
+    
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                const result = JSON.parse(xhr.response);
+                resolve(result);
+            }
+        }
+    })
+}
 
 class GoodsItem {
-    constructor ({title = "", price = 0}) {
-        this.title = title;
+    constructor ({product_name = "", price = 0}) {
+        this.product_name = product_name;
         this.price = price;
     }
 
@@ -17,7 +42,7 @@ class GoodsItem {
         return `
         <div class="goods-item">
             <div class="goods-item-img">
-            </div><h3>${this.title}</h3>
+            </div><h3>${this.product_name}</h3>
             <p>Цена товара: $${this.price}</p>
             <button class="addToCart">Добавить</button>
         </div>
@@ -27,8 +52,11 @@ class GoodsItem {
 
 class GoodsList {
     list = [];
-    fetchGoods() {
-        this.list = goods;
+    fetchGoods(callback) {
+        service(url).then((data) => {
+            this.list = data;
+            callback();
+        });
     }
 
     render() {
@@ -47,6 +75,7 @@ class GoodsList {
 
 const goodsList = new GoodsList;
 
-goodsList.fetchGoods();
-goodsList.render();
-goodsList.totalPrice();
+goodsList.fetchGoods(() => {
+    goodsList.render();
+    goodsList.totalPrice();
+});
