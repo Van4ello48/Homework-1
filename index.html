@@ -6,29 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Homework 1</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
 <body>
-    <header>
-        <div class="main-menu">
-            <div class="top-menu">
-                <div class="top-menu-search">
-                    <div class="top-menu-search-icons">
-                        <div class="top-menu-search-icons-icon"></div>
-                        <div class="top-menu-search-icons-icon"></div>
-                        <div class="top-menu-search-icons-icon"></div>
+    <div id="root">
+        <header>
+            <div class="main-menu">
+                <div class="top-menu">
+                    <div class="top-menu-search">
+                        <div class="top-menu-search-icons">
+                            <div class="top-menu-search-icons-icon"></div>
+                            <div class="top-menu-search-icons-icon"></div>
+                            <div class="top-menu-search-icons-icon"></div>
+                        </div>
+                        <input class="top-menu-search-input" v-model="search">
                     </div>
-                    <div class="top-menu-search-input"></div>
+                </div>
+                <div class="bottom-menu">
+                    <button class="cart-button" type="button" @click="clickHandler">Корзина</button>
                 </div>
             </div>
-            <div class="bottom-menu">
-                <button class="cart-button" type="button">Корзина</button>
+        </header>
+        <main>
+            <div class="goods-list">
+                <div class="goods-item" v-for="item in filteredGoods">
+                    <div class="goods-item-img"></div>
+                    <h3>{{item.product_name}}</h3>
+                    <p>Цена товара: ${{item.price}}</p>
+                    <button class="addToCart">Добавить</button>
+                </div>
             </div>
-        </div>
-    </header>
-    <main>
-        <div class="goods-list"></div>
-    </main>
-    
+            <div v-if="filteredGoods.length === 0">нет данных</div>
+            <div>{{totalPrice}}</div>
+            <div>{{search}}</div>
+        </main>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

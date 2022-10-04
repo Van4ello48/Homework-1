@@ -4,78 +4,38 @@ const URL = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-a
 const GOODS = "/catalogData.json";
 const url = `${URL}${GOODS}`;
 
-const service = function (url) {
-    return new Promise((resolve) => {
-        let xhr;
-
-        if (window.XMLHttpRequest) {
-            xhr = new XMLHttpRequest();
-        } else if (window.ActiveXObject) {
-            xhr = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-    
-        xhr.open("GET", url, true);
-    
-        xhr.timeout = 5000;
-        xhr.ontimeout = function () {
-            console.log("функция не выполнилась");
-        }
-    
-        xhr.send();
-    
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                const result = JSON.parse(xhr.response);
-                resolve(result);
-            }
-        }
-    })
+//Почему то стоит подчеркивание у функции service, предлагает сделать её асинхронной, это важно?
+function service(url) {
+    return fetch(url).then((res) => res.json())
 }
 
-class GoodsItem {
-    constructor ({product_name = "", price = 0}) {
-        this.product_name = product_name;
-        this.price = price;
+const app = new Vue({
+    el: '#root',
+    data: {
+        goods: [],
+        search: "",
+    },
+    mounted() {
+        setTimeout(() => {
+            service(url).then((data) => {
+                this.goods = data;
+            })
+        }, 2000)
+    },
+    computed: {
+        totalPrice() {
+            return this.goods.reduce((sum, product) => sum + product.price, 0);
+        },
+        filteredGoods() {
+            return this.goods.filter((item) => {
+                const regExp = new RegExp(this.search, 'gi');
+                return regExp.test(item.product_name)
+            })
+        }
+    },
+    methods: {
+        clickHandler() {
+            console.log(1)
+        }
     }
-
-    render() {
-        return `
-        <div class="goods-item">
-            <div class="goods-item-img">
-            </div><h3>${this.product_name}</h3>
-            <p>Цена товара: $${this.price}</p>
-            <button class="addToCart">Добавить</button>
-        </div>
-        `
-    }
-};
-
-class GoodsList {
-    list = [];
-    fetchGoods(callback) {
-        service(url).then((data) => {
-            this.list = data;
-            callback();
-        });
-    }
-
-    render() {
-        let resultList = this.list.map(item => {
-            const goodsItem = new GoodsItem(item);
-            return goodsItem.render();
-        }).join("");
-
-        document.querySelector('.goods-list').innerHTML = resultList;
-    };
-
-    totalPrice() {
-        console.log(this.list.reduce((sum, product) => sum + product.price, 0));
-    }
-};
-
-const goodsList = new GoodsList;
-
-goodsList.fetchGoods(() => {
-    goodsList.render();
-    goodsList.totalPrice();
-});
+})
