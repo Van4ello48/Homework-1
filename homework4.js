@@ -39,5 +39,5 @@
     }
  }
  
- const arrowFunction = getArrowFunction.bind(user);
+ const arrowFunction = getArrowFunction.call(user);
  arrowFunction();
