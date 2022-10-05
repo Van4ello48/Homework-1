@@ -14,6 +14,7 @@ const app = new Vue({
     data: {
         goods: [],
         search: "",
+        isVisibleCart: false,
     },
     mounted() {
         setTimeout(() => {
@@ -34,8 +35,8 @@ const app = new Vue({
         }
     },
     methods: {
-        clickHandler() {
-            console.log(1)
-        }
+        openCart() {
+            this.isVisibleCart = !this.isVisibleCart;
+        },
     }
 })

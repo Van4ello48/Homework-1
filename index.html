@@ -10,6 +10,14 @@
 </head>
 <body>
     <div id="root">
+        <div class="fixed-cart-background" v-if="isVisibleCart">
+            <div class="fixed-cart">
+                <div class="fixed-cart-header">
+                    <h1 class="fixed-cart-name">basket card</h1>
+                    <div class="fixed-cart-close" @click="openCart">x</div>
+                </div>
+            </div>
+        </div>
         <header>
             <div class="main-menu">
                 <div class="top-menu">
@@ -23,7 +31,7 @@
                     </div>
                 </div>
                 <div class="bottom-menu">
-                    <button class="cart-button" type="button" @click="clickHandler">Корзина</button>
+                    <button class="cart-button" type="button" @click="openCart">Корзина</button>
                 </div>
             </div>
         </header>
