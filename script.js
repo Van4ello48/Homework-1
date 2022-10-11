@@ -41,13 +41,25 @@ function init() {
                 <div class="fixed-cart">
                     <div class="fixed-cart-header">
                         <h1 class="fixed-cart-name">basket card</h1>
-                        <div class="fixed-cart-close" @click="openCart">x</div>
+                        <div class="fixed-cart-close" @click="$emit('close')">
+                            <slot></slot>
+                        </div>
                     </div>
                 </div>
             </div>
         `
     });
-    
+
+
+
+    Vue.component('searching', {
+          props: [
+              'value'
+          ],
+        template: `
+            <input type="search" class="top-menu-search-input" @input="$emit('input_search', $event.target.value)">
+        `
+    })
 
     const app = new Vue({
         el: '#root',
@@ -78,6 +90,9 @@ function init() {
             openCart() {
                 this.isVisibleCart = !this.isVisibleCart;
             },
+            input(value) {
+                this.search = value;
+            }
         }
     })
 }

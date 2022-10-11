@@ -10,7 +10,7 @@
 </head>
 <body>
     <div id="root">
-        <fixed_cart v-if="isVisibleCart"></fixed_cart>
+        <fixed_cart v-if="isVisibleCart" @close="openCart">x</fixed_cart>
         <header>
             <div class="main-menu">
                 <div class="top-menu">
@@ -20,7 +20,7 @@
                             <div class="top-menu-search-icons-icon"></div>
                             <div class="top-menu-search-icons-icon"></div>
                         </div>
-                        <input class="top-menu-search-input" v-model="search">
+                        <searching @input_search="input" :value="search"></searching>
                     </div>
                 </div>
                 <div class="bottom-menu">
